@@ -7,7 +7,8 @@ import sys
 from lib.logging import log, KodiLogProxyHandler
 # noinspection PyUnresolvedReferences
 from lib.kodi_util import translatePath, xbmc, xbmcgui
-from lib.properties import getGlobalProperty, setGlobalProperty
+from lib.properties import getGlobalProperty, setGlobalProperty, setGlobalBoolProperty
+from lib.util import forced_update_check
 from tendo_singleton import SingleInstance, SingleInstanceException
 
 
@@ -99,6 +100,7 @@ try:
                             # no immediate start requested
                             main.util.MONITOR.waitForAbort(0.5)
 
+                setGlobalBoolProperty('force_update', forced_update_check())
                 setGlobalProperty('waiting_for_start', '', wait=True)
                 setGlobalProperty('started', '1', wait=True)
 

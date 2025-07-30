@@ -2693,3 +2693,7 @@ msgstr ""
 msgctxt "#34011"
 msgid "Remove from watchlist"
 msgstr ""
+
+msgctxt "#34012"
+msgid "\nCustom: Custom branch"
+msgstr ""
