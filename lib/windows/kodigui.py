@@ -125,11 +125,21 @@ class XMLBase(object):
                 util.ERROR("Possibly broken XML file: {}, triggering recompilation.".format(self.xmlFile))
                 util.showNotification("Recompiling templates", time_ms=1000,
                                       header="Possibly broken XML file(s)")
-                if xbmc.Player().isPlaying():
-                    try:
-                        xbmc.Player().stop()
-                    except:
-                        pass
+
+                try:
+                    if xbmc.Player().isPlaying():
+                        try:
+                            xbmc.Player().stop()
+                        except:
+                            pass
+
+                    tries = 0
+                    while xbmc.Player().isPlaying() and tries < 50:
+                        util.MONITOR.waitForAbort(0.1)
+                        tries += 1
+                except:
+                    pass
+
                 xbmc.sleep(1000)
 
                 if self.__class__.__name__ == "HomeWindow":
@@ -270,7 +280,7 @@ class BaseWindow(XMLBase, xbmcgui.WindowXML, BaseFunctions):
 
     def updateBackgroundFrom(self, ds):
         if util.addonSettings.dynamicBackgrounds:
-            return self.windowSetBackground(util.backgroundFromArt(ds.art, width=self.width, height=self.height))
+            return self.windowSetBackground(util.backgroundFromArt(ds.get('art', ds.get('parentArt', ds.get('grandparentArt', None))), width=self.width, height=self.height))
 
     def windowSetBackground(self, value):
         if not util.addonSettings.dbgCrossfade:

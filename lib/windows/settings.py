@@ -755,6 +755,16 @@ class Settings(object):
                         ('skip_credits', T(32496, 'Skip Credits')),
                     )
                 ).description(T(32939, 'Only applies to video player UI')),
+                MultiUAOptionsSetting(
+                    'fast_pause_resume', T(34012, 'Fast pause/resume'),
+                    [],
+                    (
+                        ('paused', T(34013, 'when paused')),
+                        ('playing', T(34014, 'when playing')),
+                    )
+                ).description(T(34015, 'User-specific. Use OK/ENTER button to pause instead of showing the OSD'
+                                       ' (which can then only be accessed using DOWN), or resume when paused. '
+                                       'Only works with \'Behave like official Plex clients\' enabled.')),
                 OptionsSetting(
                     'video_show_playlist', T(32936, 'Show playlist button'), 'eponly',
                     (
@@ -923,7 +933,7 @@ class Settings(object):
                                        'when changed and closing settings.\nDefault: Repository\n\nBeta: Bleeding '
                                        'edge (possibly unstable)\nStable: Stable branch (faster than Repository)\n'
                                        'Repository: Kodi repository (official (slow) or Don\'t Panic)') + 
-                                       T(34012, '\nCustom: Custom branch') if SHOW_CUSTOM_UPDATER_OPTION else ''
+                                       T(34020, '\nCustom: Custom branch') if SHOW_CUSTOM_UPDATER_OPTION else ''
                               ) if not util.FROM_KODI_REPOSITORY else None,
                 MultiOptionsSetting(
                     'cache_requests', T(33724, 'Cache Plex data for'),

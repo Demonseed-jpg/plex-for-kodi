@@ -33,6 +33,7 @@ CACHE_MAP = {}
 
 class PlexServer(plexresource.PlexResource, signalsmixin.SignalsMixin):
     TYPE = 'PLEXSERVER'
+    DEFER_HUBS = False
 
     def __init__(self, data=None):
         signalsmixin.SignalsMixin.__init__(self)
@@ -84,7 +85,8 @@ class PlexServer(plexresource.PlexResource, signalsmixin.SignalsMixin):
         self.name = data.attrib.get('name')
         self.platform = data.attrib.get('platform')
         self.rawVersion = data.attrib.get('productVersion')
-        self.versionNorm = util.normalizedVersion(self.rawVersion)
+        if self.rawVersion:
+            self.versionNorm = util.normalizedVersion(self.rawVersion)
         self.transcodeSupport = data.attrib.get('transcodeSupport') == '1'
         self.dnsRebindingProtection = data.attrib.get('dnsRebindingProtection') == '1'
 

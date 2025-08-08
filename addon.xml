@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.plexmod"
        name="Plex"
-       version="0.8.0-beta13.5"
+       version="0.8.0-beta15"
        provider-name="pannal">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
@@ -33,12 +33,15 @@
         <source>https://github.com/pannal/plex-for-kodi</source>
         <platform>all</platform>
         <news>
-- Kodigui: Fix go home bind not working
-- Watchlist/Autoremove: Only run auto remove check when coming from playback; add more debug info
-- Watchlist: Don't show "mark watched" but "remove from watchlist" in context menu
-- Watchlist/Movies/Shows: Carry is_watchlisted from watchlist view over to item view; shortcuts the check
-- Watchlist/Movies: Allow selection between multiple versions, if the case, instead of only one/the first per server (ordered by bitrate)
-- Watchlist/Movies: Make availability info scrollable if too long
+- Core: Only start shutdown timer when exitting or quitting (bug introduced with last beta)
+- Home: Support sections with deferred hubs (external ones)
+- Cast/Roles: Don't crash on undefined roles (bug introduced with last beta)
+- Movies: Fix custom themes leading to unplayable items (bug introduced with last beta)
+- Movies/Shows: Use "Related Media" instead of "Related Movies"/"Related Shows" when visiting a Watchlist/Discover item
+- Home/Watchlist-Hubs: Show external watchlist hubs: Continue Watching, Coming Soon, Recently Added
+- Home/Watchlist-Hubs: Show external discover hubs: Top Watchlisted, Coming Soon (services?), Trending with Friends, Trending on your Services, New on your Services
+- ThemeMusic: Honor theme.ext even if the show itself doesn't have a theme set
+- ThemeMusic: Stabilize BGM handling for movies with custom themes and Show playback from Show screen
         </news>
         <assets>
             <icon>icon2.png</icon>

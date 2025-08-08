@@ -11,7 +11,6 @@ from lib.properties import getGlobalProperty, setGlobalProperty, setGlobalBoolPr
 from lib.util import forced_update_check
 from tendo_singleton import SingleInstance, SingleInstanceException
 
-
 # tempfile's standard temp dirs won't work on specific OS's (android)
 tempfile.tempdir = translatePath("special://temp/")
 

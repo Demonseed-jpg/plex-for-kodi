@@ -86,6 +86,7 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
         self.openedWithAutoPlay = False
         self.needs_related_divider = False
         self.fromPlayback = False
+        self.useBGM = False
 
     def doClose(self):
         self.relatedPaginator = None
@@ -103,8 +104,7 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
         self.initialized = True
 
         if not util.getSetting("slow_connection") and not self.openedWithAutoPlay:
-            locations = [os.path.dirname(s.part.file) for s in self.video.videoStreams]
-            self.playThemeMusic(None, self.video.ratingKey, locations, self.video.server)
+            self.themeMusicInit(self.video, locations=[os.path.dirname(s.part.file) for s in self.video.videoStreams])
 
     def doAutoPlay(self):
         # First reload the video to get all the other info
@@ -115,17 +115,20 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
     @busy.dialog()
     def onReInit(self):
         PlaybackBtnMixin.onReInit(self)
-        self.useBGM = False
+        self.themeMusicReinit(self.video)
         self.initialized = False
         if util.getSetting("slow_connection"):
             self.progressImageControl.setWidth(1)
             self.setProperty('remainingTime', T(32914, "Loading"))
         self.video.reload(checkFiles=1, fromMediaChoice=self.video.mediaChoice is not None, **VIDEO_RELOAD_KW)
+        removed_from_wl = False
         if self.fromPlayback:
-            self.wl_auto_remove(self.video)
-        self.refreshInfo(from_reinit=True)
-        self.checkIsWatchlisted(self.video)
+            removed_from_wl = self.wl_auto_remove(self.video)
         self.fromPlayback = False
+        self.refreshInfo(from_reinit=True)
+
+        if not removed_from_wl:
+            self.checkIsWatchlisted(self.video)
         self.initialized = True
 
     def refreshInfo(self, from_reinit=False):
@@ -535,10 +538,10 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
             self.playBtnClicked = True
 
         self.fromPlayback = True
-        self.processCommand(videoplayer.play(video=self.video, resume=resume))
+        self.processCommand(videoplayer.play(video=self.video, resume=resume, bgm=self.useBGM))
         return True
 
-    def openItem(self, control=None, item=None, inherit_from_watchlist=True, server=None, is_watchlisted=False):
+    def openItem(self, control=None, item=None, inherit_from_watchlist=True, server=None, is_watchlisted=False, **kw):
         if not item:
             mli = control.getSelectedItem()
             if not mli:
@@ -546,7 +549,7 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
             item = mli.dataSource
 
         self.processCommand(opener.open(item, from_watchlist=self.fromWatchlist if inherit_from_watchlist else False,
-                                        server=server, is_watchlisted=is_watchlisted))
+                                        server=server, is_watchlisted=is_watchlisted, **kw))
 
     def focusPlayButton(self, extended=False):
         if extended:
@@ -632,7 +635,7 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
             cast = u' / '.join([r.tag for r in self.video.roles()][:5])
             castLabel = 'CAST'
             self.setProperty('cast', cast and u'{0}    {1}'.format(castLabel, cast) or '')
-            self.setProperty('related.header', T(32404, 'Related Movies'))
+            self.setProperty('related.header', T(32404, 'Related Movies') if not self.fromWatchlist else T(34018, 'Related Media'))
 
         if self.fromWatchlist:
             self.setProperty('studios', u' / '.join([r.tag for r in self.video.studios()][:2]))
@@ -753,8 +756,10 @@ class PrePlayWindow(kodigui.ControlledWindow, windowutils.UtilMixin, RatingsMixi
             self.rolesListControl.reset()
             return False
 
-        for role in self.video.roles():
-            mli = kodigui.ManagedListItem(role.tag, role.role, thumbnailImage=role.thumb.asTranscodedImageURL(*self.ROLES_DIM), data_source=role)
+        for role in self.video.combined_roles:
+            mli = kodigui.ManagedListItem(role.tag, role.role or util.TRANSLATED_ROLES[role.translated_role],
+                                          thumbnailImage=role.thumb.asTranscodedImageURL(*self.ROLES_DIM),
+                                          data_source=role)
             mli.setProperty('index', str(idx))
             items.append(mli)
             idx += 1

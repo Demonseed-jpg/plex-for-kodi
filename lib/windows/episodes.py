@@ -317,16 +317,14 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
         if self.show_ and not util.getSetting("slow_connection") and \
                 (not self.cameFrom or self.cameFrom not in (self.show_.ratingKey, "postplay")) and \
                 not self.openedWithAutoPlay:
-            theme_url = self.show_.theme and self.show_.theme.asURL(True) or None
-            self.playThemeMusic(theme_url, self.show_.ratingKey,
-                                [loc.get("path") for loc in self.show_.locations], self.show_.server)
+            self.themeMusicInit(self.show_)
 
         self.openedWithAutoPlay = False
 
     @busy.dialog()
     def onReInit(self):
         self.playBtnClicked = False
-        self.useBGM = False
+        self.themeMusicReinit(self.show_)
         if not self.tasks:
             self.tasks = backgroundthread.Tasks()
 
@@ -595,7 +593,7 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
             # wait for ep list to update
             waited = 0
             while self.episodeListControl.getSelectedItem() != selected_new and waited < 20:
-                util.MONITOR.waitForAbort(0.05)
+                util.MONITOR.waitForAbort(0.1)
                 waited += 1
 
         self.episode = None
@@ -781,9 +779,6 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
             self.setProperty('on.extras', '')
         elif xbmc.getCondVisibility('ControlGroup(50).HasFocus(0) + !ControlGroup(300).HasFocus(0) + !ControlGroup(1300).HasFocus(0)'):
             self.setProperty('on.extras', '1')
-
-        if player.PLAYER.bgmPlaying and player.PLAYER.handler.currentlyPlaying != self.show_.ratingKey:
-            player.PLAYER.stopAndWait()
 
     def openItem(self, control=None, item=None, came_from=None):
         if not item:
@@ -1255,6 +1250,7 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
         if mli != self.lastItem and not mli.getProperty("is.boundary"):
             self.lastItem = mli
             self.setProgress(mli)
+            self.fillRoles(self.relatedPaginator and self.relatedPaginator.leafCount)
 
         if action in (xbmcgui.ACTION_MOVE_UP, xbmcgui.ACTION_PAGE_UP):
             if mli.getProperty('is.header'):
@@ -1588,12 +1584,17 @@ class EpisodesWindow(kodigui.ControlledWindow, windowutils.UtilMixin, SeasonsMix
         items = []
         idx = 0
 
-        if not self.show_.roles:
+        ds = self.episodeListControl.getSelectedItem().dataSource
+
+        if not ds.roles:
             self.rolesListControl.reset()
             return False
 
-        for role in self.show_.roles():
-            mli = kodigui.ManagedListItem(role.tag, role.role, thumbnailImage=role.thumb.asTranscodedImageURL(*self.ROLES_DIM), data_source=role)
+        for role in ds.combined_roles:
+            mli = kodigui.ManagedListItem(role.tag, role.role or
+                                          util.TRANSLATED_ROLES[role.translated_role],
+                                          thumbnailImage=role.thumb.asTranscodedImageURL(*self.ROLES_DIM),
+                                          data_source=role)
             mli.setProperty('index', str(idx))
             items.append(mli)
             idx += 1
