@@ -2726,3 +2726,55 @@ msgstr ""
 msgctxt "#34019"
 msgid "Discover: {}"
 msgstr ""
+
+msgctxt "#34020"
+msgid "Loading external hubs"
+msgstr ""
+
+msgctxt "#34021"
+msgid "Please wait ..."
+msgstr ""
+
+msgctxt "#34022"
+msgid "Update"
+msgstr ""
+
+msgctxt "#34023"
+msgid "Update Type"
+msgstr ""
+
+msgctxt "#34024"
+msgid "Select the updater's source type\n\nPlex Settings: Use the settings from within the addon\nCustom Github: Provide a custom Github repository/branch\nOther Source: Download from a different source"
+msgstr ""
+
+msgctxt "#34025"
+msgid "Github Repository"
+msgstr ""
+
+msgctxt "#34026"
+msgid "Enter the Github Repository you want the updater to use\nFormat: username/repository_name"
+msgstr ""
+
+msgctxt "#34027"
+msgid "Github Branch"
+msgstr ""
+
+msgctxt "#34028"
+msgid "Enter the Github branch you want the updater to use"
+msgstr ""
+
+msgctxt "#34029"
+msgid "Info Host URL"
+msgstr ""
+
+msgctxt "#34030"
+msgid "Enter the URL to the addon.xml"
+msgstr ""
+
+msgctxt "#34031"
+msgid "Info Host URL"
+msgstr ""
+
+msgctxt "#34032"
+msgid "Enter the URL to the ZIP file"
+msgstr ""

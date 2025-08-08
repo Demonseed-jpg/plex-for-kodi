@@ -433,8 +433,69 @@
                 </setting>
             </group>
         </category>
-        <category id="system" label="33600">
+        <category id="update" label="34022">
             <group id="6" label="">
+                <setting id="update_type" type="string" label="34023" help="34024">
+                    <level>0</level>
+                    <default>plex_settings</default>
+                    <constraints>
+                        <options>
+                            <option label="Plex Settings">plex_settings</option>
+                            <option label="Custom Github">custom_github</option>
+                            <option label="Other Source">other_source</option>
+                        </options>
+                        <allowempty>false</allowempty>
+                    </constraints>
+                    <control type="list" format="string"/>
+                </setting>
+                <setting id="custom_updater_repo" type="string" parent="update_type" label="34025" help="34026">
+                    <level>1</level>
+                    <default>pannal/plex-for-kodi</default>
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <control type="edit" format="string"/>
+                    <dependencies>
+                        <dependency type="visible" setting="update_type">custom_github</dependency>
+                    </dependencies>
+                </setting>
+                <setting id="custom_updater_branch" type="string" parent="update_type" label="34027" help="34028">
+                    <level>1</level>
+                    <default>develop_kodi21</default>
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <control type="edit" format="string"/>
+                    <dependencies>
+                        <dependency type="visible" setting="update_type">custom_github</dependency>
+                    </dependencies>
+                </setting>
+                <setting id="updater_custom_base_info_host" type="string" parent="update_type" label="34029" help="34030">
+                    <level>1</level>
+                    <default></default>
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <control type="edit" format="string"/>
+                    <dependencies>
+                        <dependency type="visible" setting="update_type">other_source</dependency>
+                    </dependencies>
+                </setting>
+                <setting id="updater_custom_base_dl_host" type="string" parent="update_type" label="34031" help="34032">
+                    <level>1</level>
+                    <default></default>
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <control type="edit" format="string"/>
+                    <dependencies>
+                        <dependency type="visible" setting="update_type">other_source</dependency>
+                    </dependencies>
+                </setting>
+            </group>
+        </category>
+        <category id="system" label="33600">
+            <group id="7" label="">
                 <setting id="cache_templates" type="boolean" label="33066" help="33067">
                     <level>0</level>
                     <default>true</default>

@@ -70,6 +70,11 @@ class AddonSettings(object):
         ("requests_cache_expiry", 168),
         ("playlist_max_size", 500),
         ("max_shutdown_wait", 5),
+        ("update_type", "plex_settings"),
+        ("custom_updater_repo", "pannal/plex-for-kodi"),
+        ("custom_updater_branch", "develop_kodi21"),
+        ("updater_custom_base_info_host", ""),
+        ("updater_custom_base_dl_host", ""),
     )
 
     def __init__(self):
